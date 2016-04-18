@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RiseNumberTextView">
+        <attr name="type" format="enum">
+            <enum name="integer" value="0" />
+            <enum name="float" value="1" />
+        </attr>
+        <attr name="startNum" format="float" />
+        <attr name="endNum" format="float" />
+        <attr name="decimal" format="integer" />
+        <attr name="duration" format="integer" />
+    </declare-styleable>
+</resources>
