@@ -14,8 +14,10 @@ public class RiseNumberTextView extends TextView {
     private int mType;
     private float mStartNum;
     private float mEndNum;
-    private int mDecimal;
+    private int mDecimalPlace;
     private int mDuration;
+    private int mMaxDecimalPlace;
+    private int mMinDecimalPlace;
     private DecimalFormat mDecimalFormat;
     private boolean mRunning;
 
@@ -39,10 +41,10 @@ public class RiseNumberTextView extends TextView {
 
             switch (mType) {
                 case 0:
-                    runInt();
+                    runFloat();
                     break;
                 case 1:
-                    runFloat();
+                    runInt();
                     break;
             }
         }
@@ -78,9 +80,9 @@ public class RiseNumberTextView extends TextView {
         mEndNum = endNum;
     }
 
-    public void setDecimal(int decimal) {
-        if (mDecimal > 1 && mDecimal < 9)
-            mDecimal = decimal;
+    public void setDecimal(int decimalPlace) {
+        if (mDecimalPlace > mMinDecimalPlace && mDecimalPlace < mMaxDecimalPlace)
+            mDecimalPlace = decimalPlace;
     }
 
     public void setDuration(int duraion) {
@@ -90,37 +92,31 @@ public class RiseNumberTextView extends TextView {
     private void initAttrs(Context context, AttributeSet attrs) {
         Resources res = context.getResources();
 
+        mType = res.getInteger(R.integer.default_type);
+        mStartNum = res.getInteger(R.integer.default_start);
+        mEndNum = res.getInteger(R.integer.default_end);
+        mMaxDecimalPlace = res.getInteger(R.integer.max_decimal_place);
+        mMinDecimalPlace = res.getInteger(R.integer.min_decimal_place);
+
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RiseNumberTextView);
-        mDecimal = a.getInteger(R.styleable.RiseNumberTextView_decimal, res.getInteger(R.integer.default_decimal));
-        if (mDecimal < 1 || mDecimal > 9)
-            mDecimal = res.getInteger(R.integer.default_decimal);
-        mType = a.getInteger(R.styleable.RiseNumberTextView_type, 0);
-        mStartNum = a.getFloat(R.styleable.RiseNumberTextView_startNum, 0);
-        mEndNum = a.getFloat(R.styleable.RiseNumberTextView_endNum, 0);
-        mDuration = a.getInteger(R.styleable.RiseNumberTextView_duration, res.getInteger(R.integer.default_duration));
+        mDecimalPlace = a.getInteger(R.styleable.RiseNumberTextView_decimal,
+                res.getInteger(R.integer.default_decimal_place));
+        if (mDecimalPlace < mMinDecimalPlace || mDecimalPlace > mMaxDecimalPlace)
+            mDecimalPlace = res.getInteger(R.integer.default_decimal_place);
+        mType = a.getInteger(R.styleable.RiseNumberTextView_type, mType);
+        mStartNum = a.getFloat(R.styleable.RiseNumberTextView_startNum, mStartNum);
+        mEndNum = a.getFloat(R.styleable.RiseNumberTextView_endNum, mStartNum);
+        mDuration = a.getInteger(R.styleable.RiseNumberTextView_duration,
+                res.getInteger(R.integer.default_duration));
         a.recycle();
     }
 
     private void initFormat() {
         StringBuilder pattern = new StringBuilder("##0.");
-        for (int i = 0; i < mDecimal; i++)
+        for (int i = 0; i < mDecimalPlace; i++)
             pattern.append("0");
 
         mDecimalFormat = new DecimalFormat(pattern.toString());
-    }
-
-    private void runInt() {
-        ValueAnimator animator = ValueAnimator.ofInt((int) mStartNum, (int) mEndNum);
-        animator.setDuration(mDuration);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                setText(animation.getAnimatedValue().toString());
-                if (animation.getAnimatedFraction() >= 1)
-                    mRunning = false;
-            }
-        });
-        animator.start();
     }
 
     private void runFloat() {
@@ -130,6 +126,20 @@ public class RiseNumberTextView extends TextView {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 setText(mDecimalFormat.format(Float.parseFloat(animation.getAnimatedValue().toString())));
+                if (animation.getAnimatedFraction() >= 1)
+                    mRunning = false;
+            }
+        });
+        animator.start();
+    }
+
+    private void runInt() {
+        ValueAnimator animator = ValueAnimator.ofInt((int) mStartNum, (int) mEndNum);
+        animator.setDuration(mDuration);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                setText(animation.getAnimatedValue().toString());
                 if (animation.getAnimatedFraction() >= 1)
                     mRunning = false;
             }

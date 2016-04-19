@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="default_decimal">2</integer>
-    <integer name="max_decimal">9</integer>
+    <integer name="default_type">0</integer>
+    <integer name="default_start">0</integer>
+    <integer name="default_end">0</integer>
+    <integer name="default_decimal_place">2</integer>
+    <integer name="min_decimal_place">1</integer>
+    <integer name="max_decimal_place">9</integer>
     <integer name="default_duration">1500</integer>
 </resources>
