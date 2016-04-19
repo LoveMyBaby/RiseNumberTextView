@@ -7,7 +7,7 @@
         </attr>
         <attr name="startNum" format="float" />
         <attr name="endNum" format="float" />
-        <attr name="decimal" format="integer" />
+        <attr name="decimalPlace" format="integer" />
         <attr name="duration" format="integer" />
     </declare-styleable>
 </resources>

@@ -99,7 +99,7 @@ public class RiseNumberTextView extends TextView {
         mMinDecimalPlace = res.getInteger(R.integer.min_decimal_place);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RiseNumberTextView);
-        mDecimalPlace = a.getInteger(R.styleable.RiseNumberTextView_decimal,
+        mDecimalPlace = a.getInteger(R.styleable.RiseNumberTextView_decimalPlace,
                 res.getInteger(R.integer.default_decimal_place));
         if (mDecimalPlace < mMinDecimalPlace || mDecimalPlace > mMaxDecimalPlace)
             mDecimalPlace = res.getInteger(R.integer.default_decimal_place);

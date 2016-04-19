@@ -6,5 +6,5 @@
     <integer name="default_decimal_place">2</integer>
     <integer name="min_decimal_place">1</integer>
     <integer name="max_decimal_place">9</integer>
-    <integer name="default_duration">1500</integer>
+    <integer name="default_duration">800</integer>
 </resources>
