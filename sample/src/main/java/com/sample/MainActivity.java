@@ -20,6 +20,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        rnTextView.start();
+        rnTextView.run();
     }
 }
