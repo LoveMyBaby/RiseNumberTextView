@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="24sp"
-        app:decimalPlace="3"
-        app:endNum="4500.2" />
+        app:rntv_decimal_place="3"
+        app:rntv_num_end="4500.2" />
 
 </RelativeLayout>
