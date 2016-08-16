@@ -11,9 +11,12 @@ import java.text.DecimalFormat;
 
 public class RiseNumberTextView extends TextView {
 
+    private static final String PATTERN_PREFIX = "##0.";
+
     private int mDecimalPlace;
     private int mMaxDecimalPlace;
     private int mMinDecimalPlace;
+    private StringBuilder mDecimalPattern;
     private DecimalFormat mDecimalFormat;
     private ValueAnimator mAnimator;
 
@@ -38,7 +41,7 @@ public class RiseNumberTextView extends TextView {
     public void setDecimalPlace(int decimalPlace) {
         if (mDecimalPlace >= mMinDecimalPlace && mDecimalPlace <= mMaxDecimalPlace) {
             mDecimalPlace = decimalPlace;
-            setAnimListener();
+            setFormat();
         }
     }
 
@@ -46,8 +49,15 @@ public class RiseNumberTextView extends TextView {
         mAnimator.setDuration(duraion);
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mAnimator.removeAllUpdateListeners();
+    }
+
     private void init(AttributeSet attrs) {
         setAttrs(attrs);
+        initFormat();
         setFormat();
         setAnimListener();
     }
@@ -73,19 +83,26 @@ public class RiseNumberTextView extends TextView {
         a.recycle();
     }
 
-    private void setFormat() {
-        StringBuilder pattern = new StringBuilder("##0.");
-        for (int i = 0; i < mDecimalPlace; i++)
-            pattern.append("0");
+    private void initFormat() {
+        mDecimalPattern = new StringBuilder(PATTERN_PREFIX);
+        mDecimalFormat = new DecimalFormat();
+    }
 
-        mDecimalFormat = new DecimalFormat(pattern.toString());
+    private void setFormat() {
+        mDecimalPattern.delete(PATTERN_PREFIX.length(), mDecimalPattern.length());
+        for (int i = 0; i < mDecimalPlace; i++)
+            mDecimalPattern.append("0");
+        mDecimalFormat.applyPattern(mDecimalPattern.toString());
     }
 
     private void setAnimListener() {
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                setText(mDecimalFormat.format(Float.parseFloat(animation.getAnimatedValue().toString())));
+                if (mDecimalPlace == 0)
+                    setText(String.valueOf((int) (float) animation.getAnimatedValue()));
+                else
+                    setText(mDecimalFormat.format(Float.parseFloat(animation.getAnimatedValue().toString())));
             }
         });
     }

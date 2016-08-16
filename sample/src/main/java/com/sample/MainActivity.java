@@ -20,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        rnTextView.setNum(0, 10000); // default (0,0)
+        rnTextView.setDecimalPlace(2); // default 0
+        rnTextView.setDuration(1000); // default 800
         rnTextView.run();
     }
 }
